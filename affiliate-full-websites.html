@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Affiliate Sites & Brokers</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+  --purple: #6d28d9;
+  --light-purple: #ede9fe;
+  --text: #1f2937;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: linear-gradient(135deg,#f8fafc,#e0e7ff);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1280px;
+  margin: auto;
+  padding: 35px 20px;
+}
+
+.header {
+  background: linear-gradient(135deg,#6d28d9,#8b5cf6);
+  color: white;
+  text-align: center;
+  padding: 45px 20px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem,5vw,3rem);
+  margin: 0 0 12px;
+}
+
+.header p { margin: 0; line-height: 1.6; }
+
+.search-bar {
+  display: block;
+  width: min(100%,520px);
+  margin: 25px auto;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 15px 22px;
+  border: 2px solid #ddd6fe;
+  border-radius: 30px;
+  font-size: 16px;
+  outline: none;
+  background: white;
+}
+
+.search-bar input:focus {
+  border-color: var(--purple);
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 25px 0 35px;
+}
+
+.category-btn {
+  border: 2px solid #ddd6fe;
+  background: white;
+  color: #4b5563;
+  padding: 10px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.category-btn:hover,
+.category-btn.active {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr));
+  gap: 20px;
+}
+
+.link-card {
+  background: white;
+  border: 1px solid #e0e7ff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 5px 20px #312e8110;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.link-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px #312e8120;
+}
+
+.link-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--light-purple);
+  font-size: 28px;
+}
+
+.link-card-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 15px 0 8px;
+}
+
+.link-card-category {
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.link-card-link {
+  color: var(--purple);
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.link-card-link:hover { text-decoration: underline; }
+
+.open-btn {
+  display: inline-block;
+  margin-top: 17px;
+  padding: 11px 17px;
+  background: var(--purple);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 9px;
+}
+
+.open-btn:hover { background: #5b21b6; }
+
+.results-count {
+  text-align: center;
+  color: #64748b;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 10px;
+  color: #64748b;
+}
+
+.footer {
+  text-align: center;
+  padding: 35px 10px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media(max-width:480px) {
+  .container { padding: 20px 14px; }
+  .header { padding: 32px 16px; }
+  .link-card { padding: 20px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <header class="header">
+    <h1>Affiliate Sites &amp; Brokers</h1>
+    <p>Affiliate programs, business platforms and specialist networks</p>
+    <p>Explore the websites below and open them directly.</p>
+  </header>
+
+  <div class="search-bar">
+    <input id="search-input" type="search"
+      placeholder="Search programs by name, category or domain..."
+      aria-label="Search affiliate programs">
+  </div>
+
+  <nav class="categories" id="categories"
+    aria-label="Filter by category"></nav>
+
+  <p class="results-count" id="results-count" aria-live="polite"></p>
+
+  <main class="links-grid" id="links-grid"></main>
+
+  <footer class="footer">
+    Affiliate directory. Website links lead to external websites.
+    <br>
+    Affiliate availability, eligibility and commissions are determined
+    by each individual company. Commission amounts are not guaranteed.
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+const affiliateLinks = [
+  {
+    id:1, category:"Luxury Goods",
+    name:"Jomashop Affiliate Program", domain:"jomashop.com",
+    icon:"🕒",
+    url:"https://www.jomashop.com/affiliate-program.html"
+  },
+  {
+    id:2, category:"Luxury Goods",
+    name:"James Allen Affiliate Program", domain:"jamesallen.com",
+    icon:"💍", url:"https://www.jamesallen.com/affiliates"
+  },
+  {
+    id:3, category:"Luxury Goods",
+    name:"NET-A-PORTER Affiliate Program", domain:"net-a-porter.com",
+    icon:"🎒", url:"https://www.net-a-porter.com/"
+  },
+  {
+    id:4, category:"Luxury Goods",
+    name:"Sotheby's", domain:"sothebys.com",
+    icon:"🖼️", url:"https://www.sothebys.com/"
+  },
+  {
+    id:5, category:"Luxury Goods",
+    name:"Restoration Hardware (RH)", domain:"rh.com",
+    icon:"🛋️", url:"https://rh.com/"
+  },
+  {
+    id:6, category:"Real Estate",
+    name:"Sotheby's International Realty", domain:"sothebysrealty.com",
+    icon:"🏡", url:"https://www.sothebysrealty.com/"
+  },
+  {
+    id:7, category:"Real Estate",
+    name:"Christie's International Real Estate",
+    domain:"christiesrealestate.com", icon:"🏢",
+    url:"https://www.christiesrealestate.com/"
+  },
+  {
+    id:8, category:"Real Estate",
+    name:"Roofstock", domain:"roofstock.com",
+    icon:"🏘️", url:"https://www.roofstock.com/"
+  },
+  {
+    id:9, category:"Technology & Software",
+    name:"Shopify Affiliate Program", domain:"shopify.com",
+    icon:"🛍️", url:"https://www.shopify.com/affiliates"
+  },
+  {
+    id:10, category:"Technology & Software",
+    name:"HubSpot", domain:"hubspot.com",
+    icon:"📊", url:"https://www.hubspot.com/"
+  },
+  {
+    id:11, category:"Technology & Software",
+    name:"WP Engine", domain:"wpengine.com",
+    icon:"📦", url:"https://wpengine.com/"
+  },
+  {
+    id:12, category:"Technology & Software",
+    name:"Liquid Web", domain:"liquidweb.com",
+    icon:"🌐", url:"https://www.liquidweb.com/"
+  },
+  {
+    id:13, category:"Technology & Software",
+    name:"MemberMouse", domain:"membermouse.com",
+    icon:"📱", url:"https://membermouse.com/"
+  },
+  {
+    id:14, category:"Coaching & Consulting",
+    name:"Legendary Marketer", domain:"legendarymarketer.com",
+    icon:"🎯", url:"https://legendarymarketer.com/"
+  },
+  {
+    id:15, category:"Coaching & Consulting",
+    name:"Elevated Entrepreneurs", domain:"elevatedentrepreneurs.com",
+    icon:"📚", url:"https://elevatedentrepreneurs.com/"
+  },
+  {
+    id:16, category:"Coaching & Consulting",
+    name:"Tony Robbins", domain:"tonyrobbins.com",
+    icon:"💼", url:"https://www.tonyrobbins.com/"
+  },
+  {
+    id:17, category:"Dropshipping Suppliers",
+    name:"AutoDS", domain:"autods.com",
+    icon:"📦", url:"https://www.autods.com/"
+  },
+  {
+    id:18, category:"Dropshipping Suppliers",
+    name:"Spocket", domain:"spocket.co",
+    icon:"🌍", url:"https://www.spocket.co/"
+  },
+  {
+    id:19, category:"Dropshipping Suppliers",
+    name:"Worldwide Brands", domain:"worldwidebrands.com",
+    icon:"🌱", url:"https://www.worldwidebrands.com/"
+  },
+  {
+    id:20, category:"Dropshipping Suppliers",
+    name:"GreenDropShip", domain:"greendropship.com",
+    icon:"🪨", url:"https://greendropship.com/"
+  },
+  {
+    id:21, category:"Luxury Travel & Specialized",
+    name:"Villiers Private Jets", domain:"villiersjets.com",
+    icon:"✈️", url:"https://www.villiersjets.com/"
+  },
+  {
+    id:22, category:"Luxury Travel & Specialized",
+    name:"Boatbookings", domain:"boatbookings.com",
+    icon:"⛵", url:"https://www.boatbookings.com/"
+  },
+  {
+    id:23, category:"Luxury Travel & Specialized",
+    name:"OceansCaptain", domain:"oceanscaptain.com",
+    icon:"🚢", url:"https://oceanscaptain.com/"
+  },
+  {
+    id:24, category:"Luxury Travel & Specialized",
+    name:"Technogym", domain:"technogym.com",
+    icon:"🏋️", url:"https://www.technogym.com/"
+  },
+  {
+    id:25, category:"Luxury Travel & Specialized",
+    name:"SUPER73", domain:"super73.com",
+    icon:"🚲", url:"https://super73.com/"
+  },
+  {
+    id:26, category:"Luxury Travel & Specialized",
+    name:"Medtronic", domain:"medtronic.com",
+    icon:"🩺", url:"https://www.medtronic.com/"
+  },
+  {
+    id:27, category:"Luxury Travel & Specialized",
+    name:"Machinery Network", domain:"machinerynetwork.com",
+    icon:"🔧", url:"https://machinerynetwork.com/"
+  },
+  {
+    id:28, category:"Major Networks",
+    name:"Impact", domain:"impact.com",
+    icon:"🌐", url:"https://impact.com/"
+  },
+  {
+    id:29, category:"Major Networks",
+    name:"ShareASale", domain:"shareasale.com",
+    icon:"📈", url:"https://www.shareasale.com/"
+  },
+  {
+    id:30, category:"Major Networks",
+    name:"Rakuten Advertising", domain:"rakutenadvertising.com",
+    icon:"🎯", url:"https://rakutenadvertising.com/"
+  },
+  {
+    id:31, category:"Major Networks",
+    name:"Commission Junction (CJ)", domain:"cj.com",
+    icon:"📋", url:"https://www.cj.com/"
+  },
+  {
+    id:32, category:"Major Networks",
+    name:"PartnerStack", domain:"partnerstack.com",
+    icon:"🔗", url:"https://partnerstack.com/"
+  }
+];
+
+const grid = document.getElementById("links-grid");
+const searchInput = document.getElementById("search-input");
+const categoriesContainer = document.getElementById("categories");
+const resultsCount = document.getElementById("results-count");
+
+let activeCategory = "All";
+
+function makeExternalLink(url, label, className) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.className = className;
+  a.textContent = label;
+  return a;
+}
+
+function renderCategories() {
+  categoriesContainer.replaceChildren();
+
+  const categories = [
+    "All",
+    ...new Set(affiliateLinks.map(item => item.category))
+  ];
+
+  categories.forEach(category => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className =
+      "category-btn" +
+      (activeCategory === category ? " active" : "");
+    button.textContent =
+      category === "All" ? "All Programs" : category;
+    button.setAttribute(
+      "aria-pressed",
+      String(activeCategory === category)
+    );
+
+    button.addEventListener("click", () => {
+      activeCategory = category;
+      renderCategories();
+      renderLinks();
+    });
+
+    categoriesContainer.appendChild(button);
+  });
+}
+
+function renderLinks() {
+  const term = searchInput.value.trim().toLowerCase();
+
+  const filtered = affiliateLinks.filter(item => {
+    const matchesCategory =
+      activeCategory === "All" ||
+      item.category === activeCategory;
+
+    const searchable =
+      `${item.name} ${item.domain} ${item.category}`.toLowerCase();
+
+    return matchesCategory && searchable.includes(term);
+  });
+
+  grid.replaceChildren();
+
+  resultsCount.textContent =
+    `${filtered.length} program${filtered.length === 1 ? "" : "s"} found`;
+
+  if (filtered.length === 0) {
+    const message = document.createElement("div");
+    message.className = "empty";
+    message.textContent =
+      "No programs found. Try a different search.";
+    grid.appendChild(message);
+    return;
+  }
+
+  filtered.forEach(item => {
+    const card = document.createElement("article");
+    card.className = "link-card";
+
+    const icon = document.createElement("div");
+    icon.className = "link-card-icon";
+    icon.textContent = item.icon;
+    icon.setAttribute("aria-hidden", "true");
+
+    const name = document.createElement("div");
+    name.className = "link-card-name";
+    name.textContent = item.name;
+
+    const category = document.createElement("div");
+    category.className = "link-card-category";
+    category.textContent = item.category;
+
+    const domainLink = makeExternalLink(
+      item.url, item.domain, "link-card-link"
+    );
+
+    const openButton = makeExternalLink(
+      item.url, "Open Website ↗", "open-btn"
+    );
+
+    card.append(icon, name, category, domainLink,
+      document.createElement("br"), openButton);
+
+    grid.appendChild(card);
+  });
+}
+
+searchInput.addEventListener("input", renderLinks);
+
+renderCategories();
+renderLinks();
+</script>
+</body>
+</html>
